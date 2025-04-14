@@ -78,10 +78,25 @@ def dashboard():
         return redirect('/')
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM waivers WHERE user_id=?", (session['user_id'],))
+
+    # Get waivers created by this user
+    c.execute("SELECT id, title, link FROM waivers WHERE user_id=?", (session['user_id'],))
     waivers = c.fetchall()
+
+    # Attach signers to each waiver
+    waiver_data = []
+    for waiver in waivers:
+        c.execute("SELECT name, email, filename FROM signed_waivers WHERE waiver_id=?", (waiver[0],))
+        signers = c.fetchall()
+        waiver_data.append({
+            'id': waiver[0],
+            'title': waiver[1],
+            'link': waiver[2],
+            'signers': signers
+        })
+
     conn.close()
-    return render_template('dashboard.html', waivers=waivers)
+    return render_template('dashboard.html', waivers=waiver_data)
 
 @app.route('/create_waiver', methods=['GET', 'POST'])
 def create_waiver():
