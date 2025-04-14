@@ -121,14 +121,19 @@ def sign_waiver(link):
     c = conn.cursor()
     c.execute("SELECT id, title, body FROM waivers WHERE link=?", (link,))
     waiver = c.fetchone()
+
     if not waiver:
         return "Waiver not found"
+
+    confirmation = False
+    filename = ""
+
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         filename = f"{name.replace(' ', '_')}_{waiver[0]}.pdf"
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        
+
         c_pdf = canvas.Canvas(filepath, pagesize=letter)
         c_pdf.drawString(50, 750, f"Waiver: {waiver[1]}")
         c_pdf.drawString(50, 730, f"Signed by: {name} ({email})")
@@ -137,13 +142,14 @@ def sign_waiver(link):
             text_obj.textLine(line)
         c_pdf.drawText(text_obj)
         c_pdf.save()
-        
+
         c.execute("INSERT INTO signed_waivers (waiver_id, name, email, filename) VALUES (?, ?, ?, ?)",
                   (waiver[0], name, email, filename))
         conn.commit()
-        conn.close()
-        return f"Thank you! Waiver signed and saved as {filename}."
-    return render_template('sign_waiver.html', waiver=waiver)
+        confirmation = True
+
+    conn.close()
+    return render_template('sign_waiver.html', waiver=waiver, confirmation=confirmation, filename=filename)
 
 @app.route('/signed')
 def signed_list():
