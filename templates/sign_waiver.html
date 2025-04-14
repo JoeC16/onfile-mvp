@@ -1,15 +1,69 @@
-
 <!DOCTYPE html>
-<html>
-<head><title>Sign Waiver - Onfile</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Waiver – Onfile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+    rel="stylesheet">
+  <style>
+    body {
+      background-color: #f7fafc;
+      color: #2d3748;
+    }
+    .brand {
+      color: #2b6cb0;
+      font-weight: bold;
+    }
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .btn-primary {
+      background-color: #2b6cb0;
+      border-color: #2b6cb0;
+    }
+  </style>
+</head>
 <body>
-  <h2>{{ waiver[1] }}</h2>
-  <pre>{{ waiver[2] }}</pre>
-  <form method="POST">
-    Name: <input type="text" name="name"><br>
-    Email: <input type="email" name="email"><br>
-    <input type="checkbox" required> I agree to the terms<br>
-    <button type="submit">Sign Waiver</button>
-  </form>
+
+  <div class="container mt-5">
+    <div class="col-md-8 mx-auto">
+      <div class="text-center mb-4">
+        <h2 class="brand">Onfile</h2>
+        <p class="lead">Digital Waiver Signing</p>
+      </div>
+
+      <div class="card p-4 bg-white">
+        <h4 class="mb-3">{{ waiver[1] }}</h4>
+        <p style="white-space: pre-wrap;">{{ waiver[2] }}</p>
+
+        <hr class="my-4">
+
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="agree" required>
+            <label class="form-check-label" for="agree">
+              I have read and agree to the terms above
+            </label>
+          </div>
+          <div class="d-grid">
+            <button class="btn btn-primary" type="submit">Sign & Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
