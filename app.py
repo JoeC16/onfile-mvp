@@ -59,7 +59,8 @@ def login():
     if user:
         session['user_id'] = user[0]
         return redirect('/dashboard')
-    return "Invalid login"
+    else:
+        return "Invalid login. Please try again."
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -67,10 +68,17 @@ def signup():
     password = request.form['password']
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
+    c.execute("SELECT id FROM users WHERE email=?", (email,))
+    existing = c.fetchone()
+    if existing:
+        conn.close()
+        return "Account already exists. Please log in."
     c.execute("INSERT INTO users (email, password) VALUES (?, ?)", (email, password))
     conn.commit()
+    user_id = c.lastrowid
     conn.close()
-    return redirect('/')
+    session['user_id'] = user_id
+    return redirect('/dashboard')
 
 @app.route('/dashboard')
 def dashboard():
