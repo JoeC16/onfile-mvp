@@ -80,33 +80,48 @@
   </div>
 
   <!-- Main Content -->
-  <div class="main-content">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h3>Signed Waivers</h3>
-      <a href="/create_waiver" class="btn btn-primary">+ New Waiver</a>
-    </div>
+<div class="main-content">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Your Waivers</h3>
+    <a href="/create_waiver" class="btn btn-primary">+ New Waiver</a>
+  </div>
 
-    {% if waivers %}
-      <div class="row">
-        {% for waiver in waivers %}
-          <div class="col-md-6 mb-4">
-            <div class="card p-3 bg-white">
-              <h5>{{ waiver[1] }}</h5>
-              <p class="text-muted small">Share link:</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <code class="text-break">/waiver/{{ waiver[4] }}</code>
-                <a href="/waiver/{{ waiver[4] }}" class="btn btn-sm btn-outline-primary">Open</a>
-              </div>
+  {% if waivers %}
+    <div class="accordion" id="waiverAccordion">
+      {% for waiver in waivers %}
+        <div class="accordion-item mb-3">
+          <h2 class="accordion-header" id="heading{{ loop.index }}">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}">
+              {{ waiver.title }}
+            </button>
+          </h2>
+          <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}">
+            <div class="accordion-body">
+              <p><strong>Share link:</strong> <code>/waiver/{{ waiver.link }}</code></p>
+
+              {% if waiver.signers %}
+                <ul class="list-group">
+                  {% for signer in waiver.signers %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>{{ signer[0] }}</strong> ({{ signer[1] }})
+                      </div>
+                      <a href="/waivers/{{ signer[2] }}" class="btn btn-sm btn-outline-primary">Download PDF</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <div class="alert alert-info mt-3">No signers yet.</div>
+              {% endif %}
             </div>
           </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="alert alert-info text-center">
-        No waivers yet. Click “New Waiver” to create your first one!
-      </div>
-    {% endif %}
-  </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No waivers created yet.</div>
+  {% endif %}
+</div>
 
 </body>
 </html>
