@@ -1,0 +1,17 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Dashboard - Onfile</title></head>
+<body>
+  <h2>Welcome to Onfile</h2>
+  <a href="/create_waiver">Create New Waiver</a> | 
+  <a href="/signed">View Signed Waivers</a> | 
+  <a href="/logout">Logout</a>
+  <h3>Your Waivers</h3>
+  <ul>
+    {% for waiver in waivers %}
+    <li>{{ waiver[1] }} - Share link: <a href="/waiver/{{ waiver[4] }}">/waiver/{{ waiver[4] }}</a></li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

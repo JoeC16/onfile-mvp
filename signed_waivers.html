@@ -1,0 +1,14 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Signed Waivers - Onfile</title></head>
+<body>
+  <h2>Signed Waivers</h2>
+  <ul>
+    {% for s in signed %}
+    <li>{{ s[0] }} ({{ s[1] }}) - <a href="/waivers/{{ s[2] }}">Download PDF</a></li>
+    {% endfor %}
+  </ul>
+  <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>
