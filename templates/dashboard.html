@@ -1,17 +1,78 @@
-
 <!DOCTYPE html>
-<html>
-<head><title>Dashboard - Onfile</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard – Onfile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+    rel="stylesheet">
+  <style>
+    body {
+      background-color: #f7fafc;
+      color: #2d3748;
+    }
+    .navbar {
+      background-color: #2b6cb0;
+    }
+    .navbar-brand {
+      color: white;
+      font-weight: bold;
+    }
+    .nav-link {
+      color: white !important;
+    }
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .btn-primary {
+      background-color: #2b6cb0;
+      border-color: #2b6cb0;
+    }
+  </style>
+</head>
 <body>
-  <h2>Welcome to Onfile</h2>
-  <a href="/create_waiver">Create New Waiver</a> | 
-  <a href="/signed">View Signed Waivers</a> | 
-  <a href="/logout">Logout</a>
-  <h3>Your Waivers</h3>
-  <ul>
-    {% for waiver in waivers %}
-    <li>{{ waiver[1] }} - Share link: <a href="/waiver/{{ waiver[4] }}">/waiver/{{ waiver[4] }}</a></li>
-    {% endfor %}
-  </ul>
+
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Onfile</a>
+      <div class="d-flex">
+        <a href="/logout" class="nav-link">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3>Your Waivers</h3>
+      <a href="/create_waiver" class="btn btn-primary">+ Create New Waiver</a>
+    </div>
+
+    {% if waivers %}
+      <div class="row">
+        {% for waiver in waivers %}
+          <div class="col-md-6 mb-4">
+            <div class="card p-3 bg-white">
+              <h5>{{ waiver[1] }}</h5>
+              <p class="text-muted small">Link:</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <code class="text-break">/waiver/{{ waiver[4] }}</code>
+                <a href="/waiver/{{ waiver[4] }}" class="btn btn-sm btn-outline-primary">Open</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info text-center">
+        No waivers yet. Create one to get started!
+      </div>
+    {% endif %}
+
+  </div>
 </body>
 </html>
