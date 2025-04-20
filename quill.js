@@ -1,1 +1,1 @@
-// Placeholder for Quill integration
+// Quill.js integration placeholder

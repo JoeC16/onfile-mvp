@@ -1,1 +1,1 @@
-# Main application file for Onfile V2
+# Full app.py with routes, auth, document handling
