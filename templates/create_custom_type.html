@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Custom Document Type - Onfile</title>
+</head>
+<body>
+    <h2>Create a Custom Document Type</h2>
+    <form method="POST">
+        <input type="text" name="name" placeholder="Document Type Name" required><br><br>
+
+        <label><input type="checkbox" name="requires_signature"> Requires Signature</label><br>
+        <label><input type="checkbox" name="view_only"> View Only</label><br><br>
+
+        <button type="submit">Create Type</button>
+    </form>
+    <br>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

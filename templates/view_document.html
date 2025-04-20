@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ document.title }}</title>
+</head>
+<body>
+    <h2>{{ document.title }}</h2>
+    <p><em>{{ document.doc_type }}</em></p>
+    <div>
+        {{ document.content|safe }}
+    </div>
+    <hr>
+
+    {% if document.view_only %}
+        <p>This is a view-only document.</p>
+    {% elif not document.signed_name %}
+        <form method="POST">
+            <label>Your Name (to sign):</label><br>
+            <input type="text" name="name" required><br><br>
+            <button type="submit">Sign Document</button>
+        </form>
+    {% else %}
+        <p>This document was signed by <strong>{{ document.signed_name }}</strong> on {{ document.signed_at.strftime('%Y-%m-%d %H:%M') }}</p>
+    {% endif %}
+</body>
+</html>

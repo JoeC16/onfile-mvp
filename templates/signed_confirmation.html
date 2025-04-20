@@ -1,0 +1,13 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Signed - Onfile</title>
+</head>
+<body>
+    <h2>Thank you for signing!</h2>
+    <p>You have successfully signed: <strong>{{ document.title }}</strong></p>
+    <p>Signed by: <strong>{{ document.signed_name }}</strong> on {{ document.signed_at.strftime('%Y-%m-%d %H:%M') }}</p>
+    <a href="{{ url_for('dashboard') }}">Return to Dashboard</a>
+</body>
+</html>
