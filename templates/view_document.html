@@ -2,26 +2,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ document.title }}</title>
+  <meta charset="UTF-8">
+  <title>{{ document.title }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>{{ document.title }}</h2>
-    <p><em>{{ document.doc_type }}</em></p>
-    <div>
-        {{ document.content|safe }}
-    </div>
-    <hr>
+<body class="bg-gray-50 min-h-screen p-6">
+  <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold text-indigo-700 mb-2">{{ document.title }}</h1>
+    <p class="text-sm text-gray-500 mb-4">{{ document.doc_type }}</p>
+    <div class="prose mb-4">{{ document.content|safe }}</div>
 
     {% if document.view_only %}
-        <p>This is a view-only document.</p>
+      <p class="text-blue-600 font-semibold">This is a view-only document.</p>
     {% elif not document.signed_name %}
-        <form method="POST">
-            <label>Your Name (to sign):</label><br>
-            <input type="text" name="name" required><br><br>
-            <button type="submit">Sign Document</button>
-        </form>
+      <form method="POST" class="mt-4">
+        <label class="block mb-2 font-medium">Your Name to Sign:</label>
+        <input type="text" name="name" class="w-full px-4 py-2 border rounded-lg mb-4">
+        <button type="submit" class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition">Sign Document</button>
+      </form>
     {% else %}
-        <p>This document was signed by <strong>{{ document.signed_name }}</strong> on {{ document.signed_at.strftime('%Y-%m-%d %H:%M') }}</p>
+      <p class="text-green-700 font-medium">Signed by {{ document.signed_name }} on {{ document.signed_at.strftime('%Y-%m-%d') }}</p>
     {% endif %}
+  </div>
 </body>
 </html>
