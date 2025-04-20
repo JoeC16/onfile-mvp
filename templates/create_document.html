@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Document - Onfile</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        #editor {
+            height: 200px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>Create a New Document</h2>
+    <form method="POST">
+        <input type="text" name="title" placeholder="Document Title" required><br><br>
+
+        <label>Document Type:</label>
+        <select name="doc_type" required>
+            <option value="Waiver">Waiver</option>
+            <option value="Contract">Contract</option>
+            <option value="Policy">Policy</option>
+            <option value="Terms & Conditions">Terms & Conditions</option>
+            {% for ctype in custom_types %}
+                <option value="{{ ctype.name }}">{{ ctype.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label><input type="checkbox" name="requires_signature"> Requires Signature</label><br>
+        <label><input type="checkbox" name="view_only"> View Only</label><br><br>
+
+        <input type="hidden" name="content" id="content">
+        <div id="editor"><p>Write your document content here...</p></div><br>
+
+        <button type="submit" onclick="syncContent()">Create Document</button>
+    </form>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script>
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+        function syncContent() {
+            var html = quill.root.innerHTML;
+            document.getElementById('content').value = html;
+        }
+    </script>
+</body>
+</html>

@@ -1,88 +1,22 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Onfile – Login or Sign Up</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link 
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
-    rel="stylesheet">
-  <style>
-    body {
-      background-color: #f7fafc;
-      color: #2d3748;
-    }
-    .brand {
-      color: #2b6cb0;
-      font-weight: bold;
-    }
-    .card {
-      border: none;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-    .btn-primary {
-      background-color: #2b6cb0;
-      border-color: #2b6cb0;
-    }
-    .btn-outline-primary {
-      color: #2b6cb0;
-      border-color: #2b6cb0;
-    }
-    .btn-outline-primary:hover {
-      background-color: #2b6cb0;
-      color: #fff;
-    }
-  </style>
+    <title>Login - Onfile</title>
 </head>
 <body>
-  <div class="container mt-5">
-    <div class="row justify-content-center text-center mb-4">
-      <div class="col-md-6">
-        <h2 class="brand">Onfile</h2>
-        <p class="lead">Secure digital waivers and document workflows</p>
-      </div>
-    </div>
-
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-
-        <div class="card p-4 mb-4 bg-white">
-          <h4 class="mb-3">Login</h4>
-          <form action="/login" method="POST">
-            <div class="mb-3">
-              <label>Email</label>
-              <input type="email" name="email" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label>Password</label>
-              <input type="password" name="password" class="form-control" required>
-            </div>
-            <div class="d-grid">
-              <button class="btn btn-primary" type="submit">Log In</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="card p-4 bg-white">
-          <h4 class="mb-3">New to Onfile?</h4>
-          <form action="/signup" method="POST">
-            <div class="mb-3">
-              <label>Email</label>
-              <input type="email" name="email" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label>Password</label>
-              <input type="password" name="password" class="form-control" required>
-            </div>
-            <div class="d-grid">
-              <button class="btn btn-outline-primary" type="submit">Sign Up</button>
-            </div>
-          </form>
-        </div>
-
-      </div>
-    </div>
-  </div>
+    <h2>Login to Onfile</h2>
+    <form method="POST">
+        <input type="email" name="email" placeholder="Email" required><br><br>
+        <input type="password" name="password" placeholder="Password" required><br><br>
+        <button type="submit">Login</button>
+    </form>
+    <hr>
+    <h3>Don't have an account?</h3>
+    <form method="POST" action="/register">
+        <input type="email" name="email" placeholder="Email" required><br><br>
+        <input type="password" name="password" placeholder="Password" required><br><br>
+        <button type="submit">Register</button>
+    </form>
 </body>
 </html>
