@@ -91,5 +91,5 @@ def create_type(user_id):
         return redirect(url_for('dashboard', user_id=user_id))
     return render_template('create_custom_type.html', user_id=user_id)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
