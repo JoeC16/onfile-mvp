@@ -22,6 +22,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from config import Config
+from models import db
+
+app = Flask(__name__)
+app.config.from_object(Config)
+db.init_app(app)
+
 @app.before_first_request
 def create_tables():
     db.create_all()
