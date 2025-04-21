@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, Document
 from config import Config
@@ -16,24 +16,20 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        if "email" in request.form and "password" in request.form:
-            user = User.query.filter_by(email=request.form["email"]).first()
-            if user and check_password_hash(user.password, request.form["password"]):
-                login_user(user)
-                return redirect(url_for("dashboard"))
-            else:
-                return "Invalid credentials"
+        user = User.query.filter_by(email=request.form["email"]).first()
+        if user and check_password_hash(user.password, request.form["password"]):
+            login_user(user)
+            return redirect(url_for("dashboard"))
+        else:
+            return "Invalid credentials"
     return render_template("login.html")
-
 
 @app.route("/signup", methods=["POST"])
 def signup():
@@ -48,20 +44,17 @@ def signup():
     login_user(new_user)
     return redirect(url_for("dashboard"))
 
-
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for("login"))
 
-
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    documents = Document.query.filter_by(user_id=session["_user_id"]).all()
+    documents = Document.query.filter_by(user_id=current_user.id).all()
     return render_template("dashboard.html", documents=documents)
-
 
 @app.route("/create", methods=["GET", "POST"])
 @login_required
@@ -78,14 +71,13 @@ def create_document():
             doc_type=doc_type,
             signature_required=signature_required,
             view_only=view_only,
-            user_id=session["_user_id"],
+            user_id=current_user.id,
             created_at=datetime.utcnow()
         )
         db.session.add(doc)
         db.session.commit()
         return redirect(url_for("dashboard"))
     return render_template("create_document.html")
-
 
 @app.route("/document/<int:doc_id>")
 def view_document(doc_id):
