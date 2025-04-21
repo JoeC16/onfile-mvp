@@ -1,13 +1,12 @@
 
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
+from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 from datetime import datetime
-
-from config import Config
 from models import db, User, Document
+from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -16,18 +15,22 @@ db.init_app(app)
 CORS(app)
 
 login_manager = LoginManager()
-login_manager.login_view = 'login'
 login_manager.init_app(app)
+login_manager.login_view = "login"
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(user_id)
+    return User.query.get(int(user_id))
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
+        email = request.form["email"]
+        password = request.form["password"]
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
@@ -36,20 +39,18 @@ def login():
             return "Invalid credentials"
     return render_template("login.html")
 
-@app.route("/signup", methods=["GET", "POST"])
+@app.route("/signup", methods=["POST"])
 def signup():
-    if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
-        if User.query.filter_by(email=email).first():
-            return "Email already registered"
-        hashed_pw = generate_password_hash(password, method="sha256")
-        new_user = User(email=email, password=hashed_pw)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for("dashboard"))
-    return render_template("login.html")
+    email = request.form["email"]
+    password = request.form["password"]
+    if User.query.filter_by(email=email).first():
+        return "Email already registered"
+    hashed_pw = generate_password_hash(password, method="sha256")
+    new_user = User(email=email, password=hashed_pw)
+    db.session.add(new_user)
+    db.session.commit()
+    login_user(new_user)
+    return redirect(url_for("dashboard"))
 
 @app.route("/logout")
 @login_required
@@ -60,7 +61,7 @@ def logout():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    documents = Document.query.filter_by(user_id=session["_user_id"]).all()
+    documents = Document.query.filter_by(user_id=current_user.id).all()
     return render_template("dashboard.html", documents=documents)
 
 @app.route("/create", methods=["GET", "POST"])
@@ -76,9 +77,9 @@ def create_document():
             title=title,
             content=content,
             doc_type=doc_type,
-            requires_signature=signature_required,
+            signature_required=signature_required,
             view_only=view_only,
-            user_id=session["_user_id"],
+            user_id=current_user.id,
             created_at=datetime.utcnow()
         )
         db.session.add(doc)
@@ -86,7 +87,7 @@ def create_document():
         return redirect(url_for("dashboard"))
     return render_template("create_document.html")
 
-@app.route("/document/<doc_id>")
+@app.route("/document/<int:doc_id>")
 def view_document(doc_id):
     document = Document.query.get_or_404(doc_id)
     return render_template("view_document.html", document=document)
