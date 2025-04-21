@@ -72,7 +72,7 @@ def logout():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    documents = Document.query.filter_by(user_id=current_user.id).all()
+    documents = Document.query.filter_by(user_id=session["_user_id"]).all()
     return render_template("dashboard.html", documents=documents)
 
 @app.route("/create", methods=["GET", "POST"])
