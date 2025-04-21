@@ -16,39 +16,27 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
+# Ensure tables are created on first request
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from config import Config
-from models import db
-
-app = Flask(__name__)
-app.config.from_object(Config)
-db.init_app(app)
-
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
-
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
+        email = request.form.get("email")
+        password = request.form.get("password")
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
+            session["user_id"] = user.id
             return redirect(url_for("dashboard"))
-        else:
-            return "Invalid credentials"
+        return "Invalid credentials"
     return render_template("login.html")
-
 
 @app.route("/signup", methods=["POST"])
 def signup():
@@ -61,22 +49,21 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
     login_user(new_user)
+    session["user_id"] = new_user.id
     return redirect(url_for("dashboard"))
-
 
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
+    session.pop("user_id", None)
     return redirect(url_for("login"))
-
 
 @app.route("/dashboard")
 @login_required
 def dashboard():
     documents = Document.query.filter_by(user_id=current_user.id).all()
     return render_template("dashboard.html", documents=documents)
-
 
 @app.route("/create", methods=["GET", "POST"])
 @login_required
@@ -101,13 +88,10 @@ def create_document():
         return redirect(url_for("dashboard"))
     return render_template("create_document.html")
 
-
 @app.route("/document/<int:doc_id>")
-@login_required
 def view_document(doc_id):
     document = Document.query.get_or_404(doc_id)
     return render_template("view_document.html", document=document)
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
