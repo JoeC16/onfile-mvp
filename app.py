@@ -12,14 +12,12 @@ app.config.from_object(Config)
 db.init_app(app)
 CORS(app)
 
+with app.app_context():
+    db.create_all()
+
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
-
-# Ensure tables are created on first request
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 @login_manager.user_loader
 def load_user(user_id):
