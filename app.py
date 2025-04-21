@@ -37,12 +37,6 @@ class Document(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Clear database and recreate tables (TEMPORARY FOR RESET)
-@app.before_first_request
-def reset_db():
-    db.drop_all()
-    db.create_all()
-
 # Routes
 @app.route("/", methods=["GET", "POST"])
 def login():
