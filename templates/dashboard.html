@@ -1,1 +1,94 @@
-<h1>Dashboard</h1>
+
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Onfile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            margin: 0;
+            display: flex;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #1f2937;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            padding: 2rem 1rem;
+        }
+        .sidebar h2 {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+        }
+        .sidebar a {
+            display: block;
+            color: #cbd5e0;
+            padding: 0.75rem;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+        }
+        .sidebar a:hover {
+            background-color: #374151;
+            color: #fff;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 2rem;
+            width: 100%;
+        }
+        .doc-card {
+            background-color: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1rem;
+        }
+        .doc-card h5 {
+            margin-bottom: 0.5rem;
+        }
+        .btn-primary {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+        .btn-outline-secondary {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #2563eb;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>Onfile</h2>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/create">+ Create Document</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="content">
+        <h3 class="mb-4">Your Documents</h3>
+
+        {% for document in documents %}
+            <div class="doc-card">
+                <h5>{{ document.title }}</h5>
+                <p class="mb-1"><strong>Type:</strong> {{ document.doc_type }}</p>
+                <p class="mb-1"><strong>Created:</strong> {{ document.created_at.strftime('%Y-%m-%d') }}</p>
+                <a href="/document/{{ document.id }}" class="btn btn-sm btn-outline-secondary mt-2">View Document</a>
+            </div>
+        {% else %}
+            <p>No documents yet. Click “Create Document” to get started.</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
