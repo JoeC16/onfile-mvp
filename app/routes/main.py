@@ -1,57 +1,59 @@
-# app/routes/main.py
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from app.models.user import User
+from app import db
 
-from flask import render_template, request, redirect, url_for, session, flash
-from app.models import db, User
+main = Blueprint("main", __name__)
 
-def init_routes(app):
-    @app.route('/')
-    def home():
-        return render_template('home.html')
+@main.route('/')
+def home():
+    return redirect(url_for('main.login'))
 
-    @app.route('/signup', methods=['GET', 'POST'])
-    def signup():
-        if request.method == 'POST':
-            email = request.form['email']
-            password = request.form['password']
-            existing_user = User.query.filter_by(email=email).first()
+@main.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        existing_user = User.query.filter_by(email=email).first()
 
-            if existing_user:
-                flash('Account already exists. Please log in instead.')
-                return redirect(url_for('login'))
+        if existing_user:
+            flash('Account already exists. Please log in instead.')
+            return redirect(url_for('main.login'))
 
-            new_user = User(email=email)
-            new_user.set_password(password)
-            db.session.add(new_user)
-            db.session.commit()
+        hashed_pw = generate_password_hash(password)
+        new_user = User(email=email, password=hashed_pw)
+        db.session.add(new_user)
+        db.session.commit()
 
-            session['user_id'] = new_user.id
-            return redirect(url_for('dashboard'))
+        login_user(new_user)
+        return redirect(url_for('main.dashboard'))
 
-        return render_template('signup.html')
+    return render_template('signup.html')
 
-    @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        if request.method == 'POST':
-            email = request.form['email']
-            password = request.form['password']
-            user = User.query.filter_by(email=email).first()
+@main.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
 
-            if user and user.check_password(password):
-                session['user_id'] = user.id
-                return redirect(url_for('dashboard'))
-            else:
-                flash('Invalid credentials. Please try again.')
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('main.dashboard'))
+        else:
+            flash('Invalid credentials. Please try again.')
 
-        return render_template('login.html')
+    return render_template('login.html')
 
-    @app.route('/logout')
-    def logout():
-        session.pop('user_id', None)
-        flash('You have been logged out.')
-        return redirect(url_for('login'))
+@main.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('main.login'))
 
-    @app.route('/dashboard')
-    def dashboard():
-        if 'user_id' not in session:
-            return redirect(url_for('login'))
-        return render_template('dashboard.html')
+@main.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
