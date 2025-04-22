@@ -1,20 +1,24 @@
-# app/__init__.py
-
 from flask import Flask
-from app.models import db
-from app.routes import main
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from app.routes.main import main  # Import Blueprint
+
+db = SQLAlchemy()
+login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'your-secret-key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///onfile.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///onfile.db'  # or os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['UPLOAD_FOLDER'] = 'app/uploaded_files'
 
     db.init_app(app)
+    login_manager.init_app(app)
 
     with app.app_context():
         db.create_all()
 
-    main.init_routes(app)
+    app.register_blueprint(main)  # ✅ Registers your routes via Blueprint
 
     return app
