@@ -1,1 +1,17 @@
-{% extends 'base.html' %}{% block content %}<form method='post' enctype='multipart/form-data'><input type='file' name='file'><button>Upload</button></form>{% endblock %}
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Upload a New Document</h2>
+
+<form method="POST" enctype="multipart/form-data" class="border rounded p-4 bg-light shadow-sm">
+  <div class="mb-3">
+    <label for="file" class="form-label">Choose a file to upload</label>
+    <input type="file" class="form-control" name="file" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+<div class="mt-4">
+  <a href="{{ url_for('main.dashboard') }}" class="btn btn-link">&larr; Back to Dashboard</a>
+</div>
+{% endblock %}
