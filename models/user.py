@@ -1,1 +1,0 @@
-# User model goes here
