@@ -1,28 +1,20 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-import os
+# app/__init__.py
 
-# Initialize extensions
-db = SQLAlchemy()
-login_manager = LoginManager()
+from flask import Flask
+from app.models import db
+from app.routes import main
 
 def create_app():
     app = Flask(__name__)
-
-    # Config
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///db.sqlite3')
+    app.config['SECRET_KEY'] = 'your-secret-key'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///onfile.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'uploaded_files')
 
-    # Initialize extensions
     db.init_app(app)
-    login_manager.init_app(app)
-    login_manager.login_view = 'main.login'
 
-    # Register blueprints
-    from .routes.main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    with app.app_context():
+        db.create_all()
+
+    main.init_routes(app)
 
     return app
