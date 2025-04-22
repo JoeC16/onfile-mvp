@@ -57,3 +57,19 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+import os
+from flask import current_app, request, redirect, url_for, render_template, flash
+from flask_login import login_required
+
+@main.route('/upload', methods=['GET', 'POST'])
+@login_required
+def upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file:
+            save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(save_path)
+            flash('File uploaded successfully.')
+            return redirect(url_for('main.dashboard'))
+    return render_template('upload.html')
