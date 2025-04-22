@@ -2,5 +2,15 @@ services:
   - type: web
     name: onfile
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn run:app
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn run:app"
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        value: rD3Xz89nWlYtC2qP6MvRu5AqBtKjHyLp
+      - key: DATABASE_URL
+        fromDatabase:
+          name: onfile-db
+          property: connectionString
