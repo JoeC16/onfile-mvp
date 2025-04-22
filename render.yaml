@@ -14,3 +14,7 @@ services:
         fromDatabase:
           name: onfile-db
           property: connectionString
+    disks:
+      - name: uploads
+        mountPath: /app/uploaded_files
+        sizeGB: 1
