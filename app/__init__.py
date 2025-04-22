@@ -7,7 +7,7 @@ login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'your-secret-key'
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-key')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///onfile.db'  # or use os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = '/app/uploaded_files'
