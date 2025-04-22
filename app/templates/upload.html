@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 class="mb-4">Upload a New Document</h2>
+<h2 class="mb-4">Upload a Document</h2>
 
-<form method="POST" enctype="multipart/form-data" class="border rounded p-4 bg-light shadow-sm">
+<form method="POST" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
   <div class="mb-3">
-    <label for="file" class="form-label">Choose a file to upload</label>
+    <label for="file" class="form-label">Choose file to upload</label>
     <input type="file" class="form-control" name="file" required>
   </div>
   <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 
-<div class="mt-4">
-  <a href="{{ url_for('main.dashboard') }}" class="btn btn-link">&larr; Back to Dashboard</a>
-</div>
+<a href="{{ url_for('main.dashboard') }}" class="btn btn-link mt-3">Back to Dashboard</a>
 {% endblock %}
