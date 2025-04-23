@@ -93,6 +93,10 @@ def create_document():
 
     return render_template('create.html')
 
+@main.route('/ping')
+def ping():
+    return "Pong!"
+
 @main.route('/debug/users')
 def debug_users():
     from app.models.user import User
