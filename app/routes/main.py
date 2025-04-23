@@ -73,3 +73,21 @@ def upload():
             flash('File uploaded successfully.')
             return redirect(url_for('main.dashboard'))
     return render_template('upload.html')
+
+@main.route('/create', methods=['GET', 'POST'])
+@login_required
+def create_document():
+    if request.method == 'POST':
+        title = request.form['title']
+        doc_type = request.form['type']
+        html_content = request.form['body']
+
+        new_doc = Document(title=title, type=doc_type, html=html_content)
+        db.session.add(new_doc)
+        db.session.commit()
+
+        flash('Document created successfully.')
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('create.html')
+
