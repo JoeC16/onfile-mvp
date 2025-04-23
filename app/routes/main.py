@@ -23,15 +23,16 @@ def signup():
             flash('Account already exists. Please log in instead.')
             return redirect(url_for('main.login'))
 
-        hashed_pw = generate_password_hash(password)
-        new_user = User(email=email, password=hashed_pw)
+        new_user = User(email=email)
+        new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
 
-        login_user(new_user)
+        login_user(new_user, remember=True)
         return redirect(url_for('main.dashboard'))
 
     return render_template('signup.html')
+
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -40,8 +41,8 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user.password, password):
-            login_user(user)
+        if user and user.check_password(password):
+            login_user(user, remember=True)
             return redirect(url_for('main.dashboard'))
         else:
             flash('Invalid credentials. Please try again.')
