@@ -73,6 +73,20 @@
 <body>
   <div class="card">
     <h2>Welcome Back</h2>
+    <!-- Flash message block -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="margin-bottom: 1rem; padding: 0.8rem; background-color: #fdecea; color: #a94442; border: 1px solid #f5c6cb; border-radius: 6px;">
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
+<form method="POST">
+  <input type="email" name="email" placeholder="Email" required />
+  <input type="password" name="password" placeholder="Password" required />
+  <button type="submit">Log In</button>
+</form>
+
     <form method="POST">
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password" required />
