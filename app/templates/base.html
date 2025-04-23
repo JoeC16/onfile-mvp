@@ -9,7 +9,8 @@
 </head>
 <body>
 <div class="d-flex">
-  <!-- Sidebar -->
+  <!-- Sidebar: show only if logged in -->
+  {% if current_user.is_authenticated %}
   <nav class="d-flex flex-column bg-light vh-100 p-3 shadow" style="width: 220px;">
     <h5 class="fw-bold mb-4">📁 Onfile</h5>
     <a href="{{ url_for('main.dashboard') }}" class="mb-3">🏠 Dashboard</a>
@@ -17,6 +18,7 @@
     <a href="{{ url_for('main.create_document') }}" class="mb-3">✍️ Create Document</a>
     <a href="{{ url_for('main.logout') }}" class="mt-auto text-danger">🚪 Logout</a>
   </nav>
+  {% endif %}
 
   <!-- Main Content -->
   <div class="flex-grow-1 p-4">
@@ -28,5 +30,4 @@
     {% block content %}{% endblock %}
   </div>
 </div>
-</body>
-</html>
+
