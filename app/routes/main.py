@@ -93,3 +93,10 @@ def create_document():
 
     return render_template('create.html')
 
+@main.route('/debug/users')
+def debug_users():
+    from app.models.user import User
+    users = User.query.all()
+    return "<br>".join([f"{u.id} – {u.email}" for u in users])
+
+
